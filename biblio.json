@@ -1,0 +1,96 @@
+{
+  "uma-trust": {
+    "authors": [
+      "Wouter Termont",
+      "Ruben Dedecker",
+      "Wout Slabbinck",
+      "Beatriz Esteves",
+      "Ben De Meester",
+      "Ruben Verborgh"
+    ],
+    "date": "5 November 2024",
+    "href": "https://arxiv.org/abs/2411.05622",
+    "title": "From Resource Control to Digital Trust with User-Managed Access",
+    "publisher": "SolidLab Flanders"
+  },
+  "oauth20": {
+    "aliasOf": "rfc6749"
+  },
+  "as-meta": {
+    "aliasOf": "rfc8414"
+  },
+  "client-meta": {
+    "aliasOf": "rfc7591"
+  },
+  "resource-meta": {
+    "authors": [
+      "Michael B. Jones",
+      "Phil Hunt",
+      "Aaron Parecki"
+    ],
+    "date": "10 January 2025",
+    "href": "https://datatracker.ietf.org/doc/draft-ietf-oauth-resource-metadata/",
+    "title": "OAuth 2.0 Protected Resource Metadata",
+    "status": "Active Internet-Draft",
+    "publisher": "IETF"
+  },
+  "wk-uri": {
+    "aliasOf": "rfc8615"
+  },
+  "uma-grant": {
+    "authors": [
+      "Maciej Machulak",
+      "Justin Richer",
+      "Eve Maler, Ed."
+    ],
+    "date": "7 January 2018",
+    "href": "https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-grant-2.0.html",
+    "title": "User-Managed Access (UMA) 2.0 Grant for OAuth 2.0 Authorization",
+    "status": "Recommendation",
+    "publisher": "Kantara Initiative",
+    "deliveredBy": [
+      {
+        "shortname": "User-Managed Access Work Group",
+        "url": "https://kantara.atlassian.net/wiki/spaces/uma"
+      }
+    ]
+  },
+  "uma-fed": {
+    "authors": [
+      "Maciej Machulak",
+      "Justin Richer",
+      "Eve Maler, Ed."
+    ],
+    "date": "7 January 2018",
+    "href": "https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-federated-authz-2.0.html",
+    "title": "Federated Authorization for User-Managed Access (UMA) 2.0",
+    "status": "Recommendation",
+    "publisher": "Kantara Initiative",
+    "deliveredBy": [
+      {
+        "shortname": "User-Managed Access Work Group",
+        "url": "https://kantara.atlassian.net/wiki/spaces/uma"
+      }
+    ]
+  },
+  "client-id": {
+    "authors": [
+      "Aaron Parecki",
+      "Emelia Smith"
+    ],
+    "date": "10 January 2025",
+    "href": "https://datatracker.ietf.org/doc/draft-parecki-oauth-client-id-metadata-document/",
+    "title": "OAuth Client ID Metadata Document",
+    "status": "Active Internet-Draft",
+    "publisher": "IETF"
+  },
+  "cre-636-347": {
+    "authors": [
+      "OWASP"
+    ],
+    "date": "n.d.",
+    "href": "https://opencre.org/cre/636-347",
+    "title": "CRE 636-347: HTTP security headers",
+    "publisher": "OpenCRE"
+  }
+}

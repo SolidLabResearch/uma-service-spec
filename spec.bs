@@ -1,11 +1,218 @@
 <pre class='metadata'>
-Title: Bikeshed Template
-Shortname: bikeshed-template
-Level: none
+Title: UMA Stream Authorization Protocol (USAP) 
+Shortname: USAP
+Level: 0
 Status: LD
-Editor: Pieter Heyvaert, Ghent University - imec http://idlab.ugent.be/, pieter.heyvaert@ugent.be
-Abstract: This is a template for using Bikeshed to write specs. It includes some KNoWS-specific configurations.
+Editor: Maarten Vandenbrande, Ghent University - imec http://idlab.ugent.be/, maarten.vandenbrande@ugent.be
+Repository: https://github.com/SolidLabResearch/uma-service-spec
+Abstract: This is a specification for adding authorization on services with uma. This spec defines an authorization abstraction layer over streams and non-http based protocols.
 Markup Shorthands: markdown yes, css no
 Canonical URL: _ORCHESTRATOR_CURRENT_BUILD_FULL_LINK_
 Previous Version: _ORCHESTRATOR_PREVIOUS_BUILD_FULL_LINK_
 </pre>
+
+Introduction {#introduction}
+=============================
+
+Modern distributed systems increasingly rely on *continuous* or *session-based*
+service interactions—spanning data streams, message brokers, IoT telemetry, or
+custom transport protocols. Traditional authorization frameworks like OAuth 2.0
+and UMA 2.0 primarily target discrete, HTTP-based request/response exchanges.
+The **UMA Stream Authorization Protocol (USAP)** extends UMA with a simple
+mechanism for maintaining continuous access authorization to non-HTTP services,
+including streaming resources, while preserving UMA’s policy-driven and
+decentralized properties. Throughout this document, “stream” is used as a
+shorthand for these long-lived service interactions.
+
+This document defines:
+
+* an HTTP control interface on the Resource Server (RS) for requesting
+    *service tokens* that represent authorization for streams and non-HTTP services,
+* the expected interaction between clients, the RS, and the UMA Authorization
+    Server (AS),
+* generic enforcement behavior for service-oriented transports (SSE, WebRTC,
+    MQTT, Kafka, custom sockets, etc.).
+
+Terminology {#terminology}
+==========================
+
+This specification reuses terms from
+[[!oauth20]], [[!uma-fed]], and [[!uma-grant]].
+
+Additional terms:
+
+* **Service Resource** — a service endpoint whose access semantics are continuous
+    or non-http based (e.g., a data stream, message topic, or telemetry channel).
+* **Service Token** — a short-lived access token issued by the RS that
+    authorizes access to a specific stream or service channel under a valid UMA
+    RPT.
+* **Service Token Endpoint** — an endpoint that returns Service Tokens to do requests
+    to a Service Resource.
+* **Session ID** — an identifier binding a series of Service Tokens to an
+    ongoing connection.
+
+Architecture Overview {#architecture}
+=====================================
+
+```text
++---------+   Obtain RPT (3)   +----------------+  introspect (6)  +----------------------+
+| Client  |===================>| Authorization  |<================>| Resource Server (RS) |
+|         |                    |   Server (AS)  |                  |                      |
+|         |                    +----------------+                  |                      |
+|         |          Obtain Service Token (4/6)                    |                      |
+|         |<======================================================>|Service Token Endpoint|
++---------+                                                        +----------------------+
+      ^                                                                       ^
+      |                  Service / Stream Channel (5)                         |
+      +-----------------------------------------------------------------------+
+```
+
+1. The client discovers a protected stream or service endpoint.
+
+2. If no valid token is presented, the RS issues a UMA permission ticket.
+
+3. The client obtains or refreshes an RPT from the AS.
+
+4. The client exchanges the RPT (and any Session ID) for a Service Token at the RS’s
+    /service/tokens endpoint.
+
+5. The Service Token is used on the continuous service or stream channel.
+
+6. The RS enforces continuous authorization through token expiry,
+    introspection, and revocation.
+
+
+Service Token Endpoint Definition {#endpoint}
+=====================================
+
+POST /service/tokens
+
+Description:
+Exchange a valid UMA Requesting Party Token (RPT) for a short-lived
+stream token authorizing access to a specific stream resource.
+
+Request
+```http
+POST /service/tokens HTTP/1.1
+Host: rs.example.org
+Authorization: Bearer <RPT>
+Content-Type: application/json
+...
+
+{
+  "resource_url": "https://rs.example.org/service_1",
+  "resource_scopes": ["urn:example:css:modes:continuous:read"]
+}
+```
+Response
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "service_token": "eyJhbGciOi...",
+  "expires_in": 60,
+  "session_id": "a91e45a2-..."
+}
+```
+The client uses service_token as a bearer or proof-of-possession credential
+when initiating the stream. To maintain continuous access, the client MUST
+refresh the service token before it expires, by getting a new RPT from the AS.
+This can be done either by getting a ticket from the RS again, sending the
+required permissions directly to the AS, or by using refresh tokens at the AS.
+This RPT can then be used to extend the session of the stream redeeming it at
+the Service Token Endpoint.
+
+Request
+```http
+POST /service/tokens HTTP/1.1
+Host: rs.example.org
+Authorization: Bearer <RPT>
+Content-Type: application/json
+...
+
+{
+  "resource_url": "https://rs.example.org/service_1",
+  "resource_scopes": ["urn:example:css:modes:continuous:read"],
+  "session_id": "a91e45a2-..."
+}
+```
+Response
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "expires_in": 60,
+  "session_id": "a91e45a2-..."
+}
+```
+
+Discovery {#discovery}
+=====================================
+
+The RS SHOULD make the Service Token Endpoint discoverable via Link headers
+(if the Service Resource is HTTP-based) or .well-known URIs.
+Request:
+```http
+GET /service_1 HTTP/1.1
+Host: rs.example.org
+```
+Response:
+```http
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: UMA as_uri="https://as.example.org", ticket="eyJhbGciOi..."
+Link: <https://rs.example.org/service/tokens>; rel="service_token_endpoint"
+```
+
+```http
+GET /.well-known/uma2-configuration HTTP/1.1
+Host: rs.example.org
+...
+```
+Response:
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "service_token_endpoint": "https://rs.example.org/service/tokens"
+}
+```
+
+Token Validation and Lifetimes {#validation}
+=====================================
+
+The RS MUST introspect the RPT with the AS to verify its validity before
+issuing a stream token. The RS MUST embed an exp claim and a unique 
+jti in each stream token. The RS MUST terminate the stream when:
+* Introspection of the RPT returns "active": false".
+* The AS notifies the RS of revocation.
+* Or the client stops refreshing tokens.
+
+Applicability to Media and Data Streams {#applicability}
+=====================================
+
+USAP is agnostic to transport. The same control interface can authorize
+continuous access to:
+
+* SSE / EventSource — Service Tokens sent as Bearer headers.
+* WebSockets — Service Tokens sent during the initial handshake.
+* more to come...
+
+Security Considerations {#security}
+=====================================
+
+All communications MUST occur over TLS. Tokens SHOULD be proof-of-possession (mTLS or DPoP) bound.
+Service tokens MUST be short-lived (shorter than the RPT token) and audience-restricted to the RS.
+
+Future Work {#future}
+=====================================
+
+Potential extensions include:
+    Push-based token revocation notifications from the AS to the RS.
+
+References {#references}
+=====================================
+
+[[!oauth20]], [[!uma-fed]], [[!uma-grant]]

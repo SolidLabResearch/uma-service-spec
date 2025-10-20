@@ -1,7 +1,7 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>Bikeshed Template</title>
+  <title>UMA Stream Authorization Protocol (USAP)</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
@@ -1490,7 +1490,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version 3f621ba99, updated Mon Jul 28 15:38:36 2025 -0700" name="generator">
   <link href="_ORCHESTRATOR_CURRENT_BUILD_FULL_LINK_" rel="canonical">
-  <meta content="e3b58ce9d0c2ea7fe48b9fbd60e40509978240a7" name="revision">
+  <meta content="67f9dcfd3dc1f1b5f5680240e15afd9cb8b0f826" name="revision">
   <meta content="dark light" name="color-scheme">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -1890,13 +1890,134 @@ a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
 dfn > a.self-link::before      { content: "#"; }
 </style>
+<style>/* Boilerplate: style-syntax-highlighting */
+code.highlight { padding: .1em; border-radius: .3em; }
+pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
+c-[a] { color: #990055 } /* Keyword.Declaration */
+c-[b] { color: #990055 } /* Keyword.Type */
+c-[c] { color: #708090 } /* Comment */
+c-[d] { color: #708090 } /* Comment.Multiline */
+c-[e] { color: #0077aa } /* Name.Attribute */
+c-[f] { color: #669900 } /* Name.Tag */
+c-[g] { color: #222222 } /* Name.Variable */
+c-[k] { color: #990055 } /* Keyword */
+c-[l] { color: #000000 } /* Literal */
+c-[m] { color: #000000 } /* Literal.Number */
+c-[n] { color: #0077aa } /* Name */
+c-[o] { color: #999999 } /* Operator */
+c-[p] { color: #999999 } /* Punctuation */
+c-[s] { color: #a67f59 } /* Literal.String */
+c-[t] { color: #a67f59 } /* Literal.String.Single */
+c-[u] { color: #a67f59 } /* Literal.String.Double */
+c-[cp] { color: #708090 } /* Comment.Preproc */
+c-[c1] { color: #708090 } /* Comment.Single */
+c-[cs] { color: #708090 } /* Comment.Special */
+c-[kc] { color: #990055 } /* Keyword.Constant */
+c-[kn] { color: #990055 } /* Keyword.Namespace */
+c-[kp] { color: #990055 } /* Keyword.Pseudo */
+c-[kr] { color: #990055 } /* Keyword.Reserved */
+c-[ld] { color: #000000 } /* Literal.Date */
+c-[nc] { color: #0077aa } /* Name.Class */
+c-[no] { color: #0077aa } /* Name.Constant */
+c-[nd] { color: #0077aa } /* Name.Decorator */
+c-[ni] { color: #0077aa } /* Name.Entity */
+c-[ne] { color: #0077aa } /* Name.Exception */
+c-[nf] { color: #0077aa } /* Name.Function */
+c-[nl] { color: #0077aa } /* Name.Label */
+c-[nn] { color: #0077aa } /* Name.Namespace */
+c-[py] { color: #0077aa } /* Name.Property */
+c-[ow] { color: #999999 } /* Operator.Word */
+c-[mb] { color: #000000 } /* Literal.Number.Bin */
+c-[mf] { color: #000000 } /* Literal.Number.Float */
+c-[mh] { color: #000000 } /* Literal.Number.Hex */
+c-[mi] { color: #000000 } /* Literal.Number.Integer */
+c-[mo] { color: #000000 } /* Literal.Number.Oct */
+c-[sb] { color: #a67f59 } /* Literal.String.Backtick */
+c-[sc] { color: #a67f59 } /* Literal.String.Char */
+c-[sd] { color: #a67f59 } /* Literal.String.Doc */
+c-[se] { color: #a67f59 } /* Literal.String.Escape */
+c-[sh] { color: #a67f59 } /* Literal.String.Heredoc */
+c-[si] { color: #a67f59 } /* Literal.String.Interpol */
+c-[sx] { color: #a67f59 } /* Literal.String.Other */
+c-[sr] { color: #a67f59 } /* Literal.String.Regex */
+c-[ss] { color: #a67f59 } /* Literal.String.Symbol */
+c-[vc] { color: #0077aa } /* Name.Variable.Class */
+c-[vg] { color: #0077aa } /* Name.Variable.Global */
+c-[vi] { color: #0077aa } /* Name.Variable.Instance */
+c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
+
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://knows.idlab.ugent.be/">
     <img alt="KNoWS" height="48" src="logo.png">
 </a>
 </p>
-   <h1 class="p-name no-ref" id="title">Bikeshed Template</h1>
+   <h1 class="p-name no-ref" id="title">UMA Stream Authorization Protocol (USAP)</h1>
    <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document,
     <time class="dt-updated" datetime="2025-10-20">20 October 2025</time></span></h2>
    <div data-fill-with="spec-metadata">
@@ -1906,7 +2027,7 @@ dfn > a.self-link::before      { content: "#"; }
      <dt>Issue Tracking:
      <dd><a href="https://github.com/SolidLabResearch/uma-service-spec/issues/">GitHub</a>
      <dt class="editor">Editor:
-     <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:pieter.heyvaert@ugent.be">Pieter Heyvaert</a> (<a class="p-org org" href="http://idlab.ugent.be/">Ghent University - imec</a>)
+     <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:maarten.vandenbrande@ugent.be">Maarten Vandenbrande</a> (<a class="p-org org" href="http://idlab.ugent.be/">Ghent University - imec</a>)
     </dl>
    </div>
    <div data-fill-with="warning"></div>
@@ -1923,25 +2044,216 @@ Parts of this work may be from another specification document.  If so, those par
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This is a template for using Bikeshed to write specs. It includes some KNoWS-specific configurations.</p>
+   <p>This is a specification for adding authorization on services with uma. This spec defines an authorization abstraction layer over streams and non-http based protocols.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
    <ol class="toc" role="directory">
+    <li><a href="#introduction"><span class="secno">1</span> <span class="content">Introduction</span></a>
+    <li><a href="#terminology"><span class="secno">2</span> <span class="content">Terminology</span></a>
+    <li><a href="#architecture"><span class="secno">3</span> <span class="content">Architecture Overview</span></a>
+    <li><a href="#endpoint"><span class="secno">4</span> <span class="content">Service Token Endpoint Definition</span></a>
+    <li><a href="#discovery"><span class="secno">5</span> <span class="content">Discovery</span></a>
+    <li><a href="#validation"><span class="secno">6</span> <span class="content">Token Validation and Lifetimes</span></a>
+    <li><a href="#applicability"><span class="secno">7</span> <span class="content">Applicability to Media and Data Streams</span></a>
+    <li><a href="#security"><span class="secno">8</span> <span class="content">Security Considerations</span></a>
+    <li><a href="#future"><span class="secno">9</span> <span class="content">Future Work</span></a>
+    <li><a href="#references"><span class="secno">10</span> <span class="content">References</span></a>
     <li><a href="#conformance"><span class="secno"></span> <span class="content">
     Conformance</span></a>
     <li>
-     <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
+     <a href="#references①"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
      </ol>
    </ol>
   </nav>
-  <main></main>
+  <main>
+   <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
+   <p>Modern distributed systems increasingly rely on <em>continuous</em> or <em>session-based</em>
+service interactions—spanning data streams, message brokers, IoT telemetry, or
+custom transport protocols. Traditional authorization frameworks like OAuth 2.0
+and UMA 2.0 primarily target discrete, HTTP-based request/response exchanges.
+The <strong>UMA Stream Authorization Protocol (USAP)</strong> extends UMA with a simple
+mechanism for maintaining continuous access authorization to non-HTTP services,
+including streaming resources, while preserving UMA’s policy-driven and
+decentralized properties. Throughout this document, “stream” is used as a
+shorthand for these long-lived service interactions.</p>
+   <p>This document defines:</p>
+   <ul>
+    <li data-md>
+     <p>an HTTP control interface on the Resource Server (RS) for requesting
+<em>service tokens</em> that represent authorization for streams and non-HTTP services,</p>
+    <li data-md>
+     <p>the expected interaction between clients, the RS, and the UMA Authorization
+Server (AS),</p>
+    <li data-md>
+     <p>generic enforcement behavior for service-oriented transports (SSE, WebRTC,
+MQTT, Kafka, custom sockets, etc.).</p>
+   </ul>
+   <h2 class="heading settled" data-level="2" id="terminology"><span class="secno">2. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h2>
+   <p>This specification reuses terms from
+<a data-link-type="biblio" href="#biblio-oauth20" title="The OAuth 2.0 Authorization Framework">[oauth20]</a>, <a data-link-type="biblio" href="#biblio-uma-fed" title="Federated Authorization for User-Managed Access (UMA) 2.0">[uma-fed]</a>, and <a data-link-type="biblio" href="#biblio-uma-grant" title="User-Managed Access (UMA) 2.0 Grant for OAuth 2.0 Authorization">[uma-grant]</a>.</p>
+   <p>Additional terms:</p>
+   <ul>
+    <li data-md>
+     <p><strong>Service Resource</strong> — a service endpoint whose access semantics are continuous
+or non-http based (e.g., a data stream, message topic, or telemetry channel).</p>
+    <li data-md>
+     <p><strong>Service Token</strong> — a short-lived access token issued by the RS that
+authorizes access to a specific stream or service channel under a valid UMA
+RPT.</p>
+    <li data-md>
+     <p><strong>Service Token Endpoint</strong> — an endpoint that returns Service Tokens to do requests
+to a Service Resource.</p>
+    <li data-md>
+     <p><strong>Session ID</strong> — an identifier binding a series of Service Tokens to an
+ongoing connection.</p>
+   </ul>
+   <h2 class="heading settled" data-level="3" id="architecture"><span class="secno">3. </span><span class="content">Architecture Overview</span><a class="self-link" href="#architecture"></a></h2>
+<pre class="language-text highlight">+---------+   Obtain RPT (3)   +----------------+  introspect (6)  +----------------------+
+| Client  |===================>| Authorization  |&lt;================>| Resource Server (RS) |
+|         |                    |   Server (AS)  |                  |                      |
+|         |                    +----------------+                  |                      |
+|         |          Obtain Service Token (4/6)                    |                      |
+|         |&lt;======================================================>|Service Token Endpoint|
++---------+                                                        +----------------------+
+      ^                                                                       ^
+      |                  Service / Stream Channel (5)                         |
+      +-----------------------------------------------------------------------+
+</pre>
+   <ol>
+    <li data-md>
+     <p>The client discovers a protected stream or service endpoint.</p>
+    <li data-md>
+     <p>If no valid token is presented, the RS issues a UMA permission ticket.</p>
+    <li data-md>
+     <p>The client obtains or refreshes an RPT from the AS.</p>
+    <li data-md>
+     <p>The client exchanges the RPT (and any Session ID) for a Service Token at the RS’s
+/service/tokens endpoint.</p>
+    <li data-md>
+     <p>The Service Token is used on the continuous service or stream channel.</p>
+    <li data-md>
+     <p>The RS enforces continuous authorization through token expiry,
+introspection, and revocation.</p>
+   </ol>
+   <h2 class="heading settled" data-level="4" id="endpoint"><span class="secno">4. </span><span class="content">Service Token Endpoint Definition</span><a class="self-link" href="#endpoint"></a></h2>
+   <p>POST /service/tokens</p>
+   <p>Description:
+Exchange a valid UMA Requesting Party Token (RPT) for a short-lived
+stream token authorizing access to a specific stream resource.</p>
+   <p>Request</p>
+<pre class="language-http highlight"><c- nf>POST</c-> <c- nn>/service/tokens</c-> <c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c->
+<c- e>Host</c-><c- o>:</c-> <c- l>rs.example.org</c->
+<c- e>Authorization</c-><c- o>:</c-> <c- l>Bearer &lt;RPT></c->
+<c- e>Content-Type</c-><c- o>:</c-> <c- l>application/json</c->
+...
+
+<c- p>{</c->
+  <c- f>"resource_url"</c-><c- p>:</c-> <c- u>"https://rs.example.org/service_1"</c-><c- p>,</c->
+  <c- f>"resource_scopes"</c-><c- p>:</c-> <c- p>[</c-><c- u>"urn:example:css:modes:continuous:read"</c-><c- p>]</c->
+<c- p>}</c->
+</pre>
+   <p>Response</p>
+<pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>200</c-> <c- ne>OK</c->
+<c- e>Content-Type</c-><c- o>:</c-> <c- l>application/json</c->
+
+<c- p>{</c->
+  <c- f>"service_token"</c-><c- p>:</c-> <c- u>"eyJhbGciOi..."</c-><c- p>,</c->
+  <c- f>"expires_in"</c-><c- p>:</c-> <c- mi>60</c-><c- p>,</c->
+  <c- f>"session_id"</c-><c- p>:</c-> <c- u>"a91e45a2-..."</c->
+<c- p>}</c->
+</pre>
+   <p>The client uses service_token as a bearer or proof-of-possession credential
+when initiating the stream. To maintain continuous access, the client MUST
+refresh the service token before it expires, by getting a new RPT from the AS.
+This can be done either by getting a ticket from the RS again, sending the
+required permissions directly to the AS, or by using refresh tokens at the AS.
+This RPT can then be used to extend the session of the stream redeeming it at
+the Service Token Endpoint.</p>
+   <p>Request</p>
+<pre class="language-http highlight"><c- nf>POST</c-> <c- nn>/service/tokens</c-> <c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c->
+<c- e>Host</c-><c- o>:</c-> <c- l>rs.example.org</c->
+<c- e>Authorization</c-><c- o>:</c-> <c- l>Bearer &lt;RPT></c->
+<c- e>Content-Type</c-><c- o>:</c-> <c- l>application/json</c->
+...
+
+<c- p>{</c->
+  <c- f>"resource_url"</c-><c- p>:</c-> <c- u>"https://rs.example.org/service_1"</c-><c- p>,</c->
+  <c- f>"resource_scopes"</c-><c- p>:</c-> <c- p>[</c-><c- u>"urn:example:css:modes:continuous:read"</c-><c- p>],</c->
+  <c- f>"session_id"</c-><c- p>:</c-> <c- u>"a91e45a2-..."</c->
+<c- p>}</c->
+</pre>
+   <p>Response</p>
+<pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>200</c-> <c- ne>OK</c->
+<c- e>Content-Type</c-><c- o>:</c-> <c- l>application/json</c->
+
+<c- p>{</c->
+  <c- f>"expires_in"</c-><c- p>:</c-> <c- mi>60</c-><c- p>,</c->
+  <c- f>"session_id"</c-><c- p>:</c-> <c- u>"a91e45a2-..."</c->
+<c- p>}</c->
+</pre>
+   <h2 class="heading settled" data-level="5" id="discovery"><span class="secno">5. </span><span class="content">Discovery</span><a class="self-link" href="#discovery"></a></h2>
+   <p>The RS SHOULD make the Service Token Endpoint discoverable via Link headers
+(if the Service Resource is HTTP-based) or .well-known URIs.
+Request:</p>
+<pre class="language-http highlight"><c- nf>GET</c-> <c- nn>/service_1</c-> <c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c->
+<c- e>Host</c-><c- o>:</c-> <c- l>rs.example.org</c->
+</pre>
+   <p>Response:</p>
+<pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>401</c-> <c- ne>Unauthorized</c->
+<c- e>WWW-Authenticate</c-><c- o>:</c-> <c- l>UMA as_uri="https://as.example.org", ticket="eyJhbGciOi..."</c->
+<c- e>Link</c-><c- o>:</c-> <c- l>&lt;https://rs.example.org/service/tokens>; rel="service_token_endpoint"</c->
+</pre>
+<pre class="language-http highlight"><c- nf>GET</c-> <c- nn>/.well-known/uma2-configuration</c-> <c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c->
+<c- e>Host</c-><c- o>:</c-> <c- l>rs.example.org</c->
+...
+</pre>
+   <p>Response:</p>
+<pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>200</c-> <c- ne>OK</c->
+<c- e>Content-Type</c-><c- o>:</c-> <c- l>application/json</c->
+
+<c- p>{</c->
+  <c- f>"service_token_endpoint"</c-><c- p>:</c-> <c- u>"https://rs.example.org/service/tokens"</c->
+<c- p>}</c->
+</pre>
+   <h2 class="heading settled" data-level="6" id="validation"><span class="secno">6. </span><span class="content">Token Validation and Lifetimes</span><a class="self-link" href="#validation"></a></h2>
+   <p>The RS MUST introspect the RPT with the AS to verify its validity before
+issuing a stream token. The RS MUST embed an exp claim and a unique 
+jti in each stream token. The RS MUST terminate the stream when:</p>
+   <ul>
+    <li data-md>
+     <p>Introspection of the RPT returns "active": false".</p>
+    <li data-md>
+     <p>The AS notifies the RS of revocation.</p>
+    <li data-md>
+     <p>Or the client stops refreshing tokens.</p>
+   </ul>
+   <h2 class="heading settled" data-level="7" id="applicability"><span class="secno">7. </span><span class="content">Applicability to Media and Data Streams</span><a class="self-link" href="#applicability"></a></h2>
+   <p>USAP is agnostic to transport. The same control interface can authorize
+continuous access to:</p>
+   <ul>
+    <li data-md>
+     <p>SSE / EventSource — Service Tokens sent as Bearer headers.</p>
+    <li data-md>
+     <p>WebSockets — Service Tokens sent during the initial handshake.</p>
+    <li data-md>
+     <p>more to come...</p>
+   </ul>
+   <h2 class="heading settled" data-level="8" id="security"><span class="secno">8. </span><span class="content">Security Considerations</span><a class="self-link" href="#security"></a></h2>
+   <p>All communications MUST occur over TLS. Tokens SHOULD be proof-of-possession (mTLS or DPoP) bound.
+Service tokens MUST be short-lived (shorter than the RPT token) and audience-restricted to the RS.</p>
+   <h2 class="heading settled" data-level="9" id="future"><span class="secno">9. </span><span class="content">Future Work</span><a class="self-link" href="#future"></a></h2>
+   <p>Potential extensions include:
+    Push-based token revocation notifications from the AS to the RS.</p>
+   <h2 class="heading settled" data-level="10" id="references"><span class="secno">10. </span><span class="content">References</span><a class="self-link" href="#references"></a></h2>
+   <p><a data-link-type="biblio" href="#biblio-oauth20" title="The OAuth 2.0 Authorization Framework">[oauth20]</a>, <a data-link-type="biblio" href="#biblio-uma-fed" title="Federated Authorization for User-Managed Access (UMA) 2.0">[uma-fed]</a>, <a data-link-type="biblio" href="#biblio-uma-grant" title="User-Managed Access (UMA) 2.0 Grant for OAuth 2.0 Authorization">[uma-grant]</a></p>
+  </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content">
-    Conformance</span></h2>
+    Conformance</span><a class="self-link" href="#conformance"></a></h2>
    <p>
             Conformance requirements are expressed with a combination of descriptive assertions and RFC 2119 terminology.
             The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
@@ -2101,9 +2413,15 @@ Parts of this work may be from another specification document.  If so, those par
 
 })();
 </script>
-  <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span></h2>
-  <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span></h3>
+  <h2 class="no-num no-ref heading settled" id="references①"><span class="content">References</span><a class="self-link" href="#references①"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-oauth20">[OAUTH20]
+   <dd>D. Hardt, Ed.. <a href="https://www.rfc-editor.org/rfc/rfc6749"><cite>The OAuth 2.0 Authorization Framework</cite></a>. October 2012. Proposed Standard. URL: <a href="https://www.rfc-editor.org/rfc/rfc6749">https://www.rfc-editor.org/rfc/rfc6749</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
+   <dt id="biblio-uma-fed">[UMA-FED]
+   <dd>Maciej Machulak; Justin Richer; Eve Maler, Ed.. <a href="https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-federated-authz-2.0.html"><cite>Federated Authorization for User-Managed Access (UMA) 2.0</cite></a>. 7 January 2018. Recommendation. URL: <a href="https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-federated-authz-2.0.html">https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-federated-authz-2.0.html</a>
+   <dt id="biblio-uma-grant">[UMA-GRANT]
+   <dd>Maciej Machulak; Justin Richer; Eve Maler, Ed.. <a href="https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-grant-2.0.html"><cite>User-Managed Access (UMA) 2.0 Grant for OAuth 2.0 Authorization</cite></a>. 7 January 2018. Recommendation. URL: <a href="https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-grant-2.0.html">https://docs.kantarainitiative.org/uma/wg/rec-oauth-uma-grant-2.0.html</a>
   </dl>
