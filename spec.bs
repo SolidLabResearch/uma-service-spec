@@ -1,6 +1,6 @@
 <pre class='metadata'>
-Title: UMA Stream Authorization Protocol (USAP) 
-Shortname: USAP
+Title: Service Authorization for Data Spaces
+Shortname: SA4DS
 Level: 0
 Status: LD
 Editor: Maarten Vandenbrande, Ghent University - imec http://idlab.ugent.be/, maarten.vandenbrande@ugent.be
@@ -18,7 +18,7 @@ Modern distributed systems increasingly rely on *continuous* or *session-based*
 service interactions—spanning data streams, message brokers, IoT telemetry, or
 custom transport protocols. Traditional authorization frameworks like OAuth 2.0
 and UMA 2.0 primarily target discrete, HTTP-based request/response exchanges.
-The **UMA Stream Authorization Protocol (USAP)** extends UMA with a simple
+The **Service Authorization for Data Spaces (SA4DS)** extends A4DS with a simple
 mechanism for maintaining continuous access authorization to non-HTTP services,
 including streaming resources, while preserving UMA’s policy-driven and
 decentralized properties. Throughout this document, “stream” is used as a
@@ -26,11 +26,11 @@ shorthand for these long-lived service interactions.
 
 This document defines:
 
-* an HTTP control interface on the Resource Server (RS) for requesting
+* An HTTP control interface on the Resource Server (RS) for requesting
     *service tokens* that represent authorization for streams and non-HTTP services,
-* the expected interaction between clients, the RS, and the UMA Authorization
+* The expected interaction between clients, the RS, and the UMA Authorization
     Server (AS),
-* generic enforcement behavior for service-oriented transports (SSE, WebRTC,
+* Generic enforcement behavior for service-oriented transports (SSE, WebRTC,
     MQTT, Kafka, custom sockets, etc.).
 
 Terminology {#terminology}
@@ -44,7 +44,7 @@ Additional terms:
 * **Service Resource** — a service endpoint whose access semantics are continuous
     or non-http based (e.g., a data stream, message topic, or telemetry channel).
 * **Service Token** — a short-lived access token issued by the RS that
-    authorizes access to a specific stream or service channel under a valid UMA
+    authorizes access to a specific service channel under a valid UMA
     RPT.
 * **Service Token Endpoint** — an endpoint that returns Service Tokens to do requests
     to a Service Resource.
@@ -63,11 +63,11 @@ Architecture Overview {#architecture}
 |         |<======================================================>|Service Token Endpoint|
 +---------+                                                        +----------------------+
       ^                                                                       ^
-      |                  Service / Stream Channel (5)                         |
+      |                  Service Channel (5)                         |
       +-----------------------------------------------------------------------+
 ```
 
-1. The client discovers a protected stream or service endpoint.
+1. The client discovers a protected service endpoint.
 
 2. If no valid token is presented, the RS issues a UMA permission ticket.
 
@@ -76,7 +76,7 @@ Architecture Overview {#architecture}
 4. The client exchanges the RPT (and any Session ID) for a Service Token at the RS’s
     /service/tokens endpoint.
 
-5. The Service Token is used on the continuous service or stream channel.
+5. The Service Token is used on the continuous service channel.
 
 6. The RS enforces continuous authorization through token expiry,
     introspection, and revocation.
@@ -89,7 +89,7 @@ POST /service/tokens
 
 Description:
 Exchange a valid UMA Requesting Party Token (RPT) for a short-lived
-stream token authorizing access to a specific stream resource.
+service token authorizing access to a specific service resource.
 
 Request
 ```http
@@ -116,11 +116,11 @@ Content-Type: application/json
 }
 ```
 The client uses service_token as a bearer or proof-of-possession credential
-when initiating the stream. To maintain continuous access, the client MUST
+when initiating the service. To maintain continuous access, the client MUST
 refresh the service token before it expires, by getting a new RPT from the AS.
 This can be done either by getting a ticket from the RS again, sending the
 required permissions directly to the AS, or by using refresh tokens at the AS.
-This RPT can then be used to extend the session of the stream redeeming it at
+This RPT can then be used to extend the session of the service redeeming it at
 the Service Token Endpoint.
 
 Request
@@ -147,6 +147,11 @@ Content-Type: application/json
   "session_id": "a91e45a2-..."
 }
 ```
+
+If the Session ID provided does not exist or has expired, the RS MUST respond
+with a 404 Not Found status code. If no valid RPT is provided, the RS MUST
+respond with a 401 Unauthorized status code and an UMA WWW-Authenticate header 
+containing a permission ticket for the service-resource and token endpoint.
 
 Discovery {#discovery}
 =====================================
@@ -184,8 +189,8 @@ Token Validation and Lifetimes {#validation}
 =====================================
 
 The RS MUST introspect the RPT with the AS to verify its validity before
-issuing a stream token. The RS MUST embed an exp claim and a unique 
-jti in each stream token. The RS MUST terminate the stream when:
+issuing a service token. The RS MUST embed an exp claim and a unique 
+jti in each service token. The RS MUST terminate the service connection when:
 * Introspection of the RPT returns "active": false".
 * The AS notifies the RS of revocation.
 * Or the client stops refreshing tokens.
@@ -193,7 +198,7 @@ jti in each stream token. The RS MUST terminate the stream when:
 Applicability to Media and Data Streams {#applicability}
 =====================================
 
-USAP is agnostic to transport. The same control interface can authorize
+SA4DS is agnostic to transport. The same control interface can authorize
 continuous access to:
 
 * SSE / EventSource — Service Tokens sent as Bearer headers.
